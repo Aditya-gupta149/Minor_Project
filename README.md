@@ -1,85 +1,69 @@
 # 🌊 Underwater Image Enhancement Using PIXMambaNet
 
-> A lightweight Mamba-inspired State Space Model (SSM) architecture for enhancing underwater images by correcting color distortion, reducing haze, improving contrast, and restoring fine details.
-
----
-
 ## 📖 Overview
 
-Underwater images often suffer from severe quality degradation due to light absorption and scattering in water. Red wavelengths are absorbed rapidly, resulting in a blue-green color cast, reduced visibility, low contrast, and blurred details.
+Underwater images often suffer from color distortion, low contrast, haze, and loss of detail due to light absorption and scattering in water. These degradations reduce visibility and affect applications such as marine exploration, underwater robotics, and autonomous navigation.
 
-To address these challenges, we propose **PIXMambaNet**, a novel deep learning architecture based on **Mamba-inspired State Space Models (SSMs)**. Unlike Vision Transformers that have quadratic complexity **O(N²)**, PIXMambaNet uses a **PixelMamba Block** that efficiently captures long-range dependencies with **linear complexity O(N)**.
+This minor project investigates the use of **PIXMambaNet**, a Mamba-inspired State Space Model (SSM) architecture, for enhancing underwater images. The model leverages efficient bidirectional sequence modeling to capture long-range dependencies while maintaining linear computational complexity.
 
-The model combines convolutional feature extraction with bidirectional sequence modeling to produce visually pleasing and structurally accurate enhanced underwater images.
+The project focuses on training, evaluating, and analyzing PIXMambaNet on benchmark underwater image datasets to improve image quality and restore visual information.
 
 ---
 
 ## 🎯 Objectives
 
-* Enhance visibility of underwater images.
-* Correct underwater color distortions.
-* Improve contrast and image sharpness.
-* Restore fine-grained textures and details.
-* Achieve efficient enhancement using a lightweight architecture.
-* Explore the application of Mamba-inspired State Space Models in image enhancement.
+* Enhance underwater image visibility.
+* Correct color distortions caused by underwater environments.
+* Improve image contrast and sharpness.
+* Restore fine details and textures.
+* Evaluate enhancement quality using standard image quality metrics.
 
 ---
 
-## ✨ Key Features
+## 🏗️ Methodology
 
-✅ Mamba-inspired PixelMamba architecture
+### PIXMambaNet Architecture
 
-✅ Bidirectional sequence processing
+The enhancement network follows an encoder-decoder architecture:
 
-✅ Adaptive gating mechanism
+* Encoder:
 
-✅ Lightweight encoder-decoder framework
+  * Conv Layer (3 → 32)
+  * Conv Layer (32 → 64)
 
-✅ Linear computational complexity O(N)
+* Bottleneck:
 
-✅ Color correction and restoration
+  * Two PixelMamba Blocks
 
-✅ Haze removal and contrast enhancement
+* Decoder:
 
-✅ Efficient deployment with only 284K parameters
+  * Conv Layer (64 → 32)
+  * Conv Layer (32 → 3)
 
----
+### Key Components
 
-## 🏗️ Proposed Architecture
-
-### PIXMambaNet Pipeline
-
-```text
-Input Underwater Image
-          │
-          ▼
-      Encoder
-   Conv (3→32)
-   Conv (32→64)
-          │
-          ▼
- PixelMamba Block × 2
-          │
-          ▼
-      Decoder
-   Conv (64→32)
-   Conv (32→3)
-          │
-          ▼
- Enhanced Output Image
-```
-
-### PixelMamba Block
-
-The PixelMamba Block consists of:
-
-* Layer Normalization
-* Forward Mixer (Linear → GELU → Linear)
-* Backward Mixer (Reverse Sequence Processing)
+* Bidirectional Feature Processing
 * Adaptive Gating Mechanism
-* Residual Connection
+* Residual Connections
+* State Space Model Inspired Design
+* Linear Complexity O(N)
 
-The block processes image features in both forward and backward directions, enabling effective global context aggregation while maintaining computational efficiency.
+---
+
+## 📂 Datasets Used
+
+### UIEB Dataset
+
+**Underwater Image Enhancement Benchmark (UIEB)**
+
+* Approximately 890 paired images
+* Raw underwater images and corresponding reference images
+* Used for training and evaluation
+
+### U45 Dataset
+
+* Standard benchmark dataset for underwater image enhancement
+* Used for additional testing and qualitative evaluation
 
 ---
 
@@ -89,7 +73,7 @@ The block processes image features in both forward and backward directions, enab
 
 * Python
 
-### Deep Learning Framework
+### Framework
 
 * PyTorch
 
@@ -99,7 +83,7 @@ The block processes image features in both forward and backward directions, enab
 * NumPy
 * OpenCV
 * Matplotlib
-* PIL (Pillow)
+* Pillow
 * tqdm
 * pytorch-msssim
 
@@ -110,191 +94,32 @@ The block processes image features in both forward and backward directions, enab
 
 ---
 
-## 📂 Datasets Used
-
-### 1. UIEB Dataset
-
-**Underwater Image Enhancement Benchmark (UIEB)**
-
-* Approximately 890 paired images
-* Raw underwater images
-* Corresponding reference images
-* Various underwater environments
-* Different lighting and turbidity conditions
-
-Used for:
-
-* Training
-* Validation
-* Quantitative Evaluation
-
----
-
-### 2. U45 Dataset
-
-A standard benchmark dataset used for evaluating underwater image enhancement methods.
-
-Used for:
-
-* Generalization testing
-* Qualitative comparison
-* Additional performance evaluation
-
----
-
-## 📊 Dataset Samples
-
-| Raw Image | Enhanced Image |
-| --------- | -------------- |
-| Add Image | Add Image      |
-
----
-
 ## ⚙️ Training Configuration
 
-| Parameter        | Value                 |
-| ---------------- | --------------------- |
-| Epochs           | 50                    |
-| Batch Size       | 8                     |
-| Learning Rate    | 1e-4                  |
-| Optimizer        | Adam                  |
-| Input Resolution | 256 × 256             |
-| Loss Function    | L1 + 0.5 × (1 − SSIM) |
-| GPU              | Tesla P100            |
+| Parameter     | Value                 |
+| ------------- | --------------------- |
+| Epochs        | 50                    |
+| Batch Size    | 8                     |
+| Learning Rate | 1e-4                  |
+| Optimizer     | Adam                  |
+| Input Size    | 256 × 256             |
+| Loss Function | L1 + 0.5 × (1 − SSIM) |
 
 ---
 
-## 📉 Loss Function
+## 📊 Evaluation Metrics
 
-The model uses a hybrid loss function:
+The model performance was evaluated using:
 
-```text
-Loss = L1 + 0.5 × (1 − SSIM)
-```
+### PSNR
 
-### Components
+Peak Signal-to-Noise Ratio
 
-### L1 Loss
+### SSIM
 
-Ensures pixel-level reconstruction accuracy.
+Structural Similarity Index Measure
 
-### SSIM Loss
-
-Preserves structural and perceptual image quality.
-
-This combination balances numerical correctness and visual realism.
-
----
-
-## 🚀 Installation
-
-### Clone Repository
-
-```bash
-git clone https://github.com/your-username/underwater-image-enhancement-mamba.git
-cd underwater-image-enhancement-mamba
-```
-
-### Create Virtual Environment
-
-```bash
-python -m venv venv
-```
-
-### Activate Environment
-
-Windows:
-
-```bash
-venv\Scripts\activate
-```
-
-Linux / Mac:
-
-```bash
-source venv/bin/activate
-```
-
-### Install Dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
----
-
-## 📁 Project Structure
-
-```text
-Underwater-Image-Enhancement/
-│
-├── dataset/
-│   ├── UIEB/
-│   └── U45/
-│
-├── models/
-│   ├── pixelmamba.py
-│   └── pixmambanet.py
-│
-├── outputs/
-│   ├── enhanced_images/
-│   └── visualizations/
-│
-├── train.py
-├── test.py
-├── inference.py
-├── requirements.txt
-├── README.md
-└── saved_model.pth
-```
-
----
-
-## 🏋️ Training
-
-Run training:
-
-```bash
-python train.py
-```
-
-The model will:
-
-* Load UIEB dataset
-* Train PIXMambaNet
-* Save checkpoints
-* Track training loss
-
----
-
-## 🧪 Testing
-
-Evaluate the model:
-
-```bash
-python test.py
-```
-
-Metrics computed:
-
-* PSNR
-* SSIM
-
----
-
-## 📸 Inference
-
-Enhance a single image:
-
-```bash
-python inference.py --image sample.jpg
-```
-
-Output images will be saved in:
-
-```text
-outputs/enhanced_images/
-```
+Higher values indicate better enhancement quality and structural preservation.
 
 ---
 
@@ -314,34 +139,47 @@ outputs/enhanced_images/
 | PSNR   | 15.73 dB |
 | SSIM   | 0.74     |
 
----
+The enhanced outputs showed noticeable improvements in:
 
-## 🔬 Ablation Study
-
-| Configuration                    | PSNR (dB) | SSIM  |
-| -------------------------------- | --------- | ----- |
-| Without Bidirectional Processing | 23.12     | 0.842 |
-| Without Gating Mechanism         | 23.58     | 0.856 |
-| Without Residual Connection      | 22.94     | 0.838 |
-| Full PIXMambaNet                 | 24.85     | 0.891 |
-
-### Key Findings
-
-* Bidirectional processing improves global context understanding.
-* Adaptive gating improves feature fusion.
-* Residual connections improve stability and reconstruction quality.
+* Color correction
+* Contrast enhancement
+* Haze reduction
+* Detail restoration
 
 ---
 
-## 📊 Comparison with Existing Methods
+## 📁 Repository Structure
 
-| Method      | PSNR (dB) | SSIM      | Parameters (M) |
-| ----------- | --------- | --------- | -------------- |
-| UWCNN       | 21.45     | 0.782     | 2.50           |
-| FUnIE-GAN   | 22.78     | 0.826     | 0.83           |
-| Water-Net   | 24.12     | 0.873     | 1.50           |
-| UGAN        | 23.85     | 0.861     | 4.20           |
-| PIXMambaNet | **24.85** | **0.891** | **0.28**       |
+```text
+.
+├── analyze/                 # Evaluation and analysis scripts
+├── src/
+│   ├── dataloaders/         # Dataset handling
+│   ├── models/              # PIXMamba model components
+│   ├── tasks/               # Training and evaluation tasks
+│   └── utils/               # Utility functions
+├── arch.png                 # Architecture diagram
+├── requirements.txt         # Python dependencies
+├── environment.yaml         # Conda environment setup
+└── README.md
+```
+
+---
+
+## 🚀 Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/your-username/Minor_Project.git
+cd Minor_Project
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
 
 ---
 
@@ -351,36 +189,35 @@ outputs/enhanced_images/
 * Underwater Robotics
 * Autonomous Underwater Vehicles (AUVs)
 * Underwater Surveillance
+* Ocean Monitoring
 * Marine Biology Research
-* Ocean Mapping
-* Underwater Archaeology
 
 ---
 
-## 🔮 Future Work
+## 📚 Learning Outcomes
 
-* Real-time underwater video enhancement
-* Cross-dataset evaluation (EUVP, UFO120)
-* Edge deployment on NVIDIA Jetson devices
-* Model quantization for mobile deployment
-* Integration with object detection systems
-* Advanced selective scanning mechanisms from Mamba
+Through this project, we gained experience in:
+
+* Deep Learning for Image Processing
+* State Space Models (Mamba)
+* PyTorch Model Training
+* Dataset Preparation and Preprocessing
+* Performance Evaluation using PSNR and SSIM
+* GPU-based Training using Google Colab
 
 ---
 
-## 👨‍💻 Authors
+## 👨‍💻 Team Members
 
-**Aditya Gupta (2304088)**
-
-**Vaishnavi Verma (2304023)**
-
-**Ashish Anand (2304089)**
+* **Aditya Gupta (2304088)**
+* **Vaishnavi Verma (2304023)**
+* **Ashish Anand (2304089)**
 
 Department of Electronics and Communication Engineering
 
 National Institute of Technology Patna
 
-Session: 2026-27
+Session: 2026–27
 
 ---
 
@@ -388,22 +225,13 @@ Session: 2026-27
 
 We sincerely thank:
 
-* **Dr. Ashish Kumar Bhandari** for his valuable guidance and supervision.
-* **Ms. Khushboo Rani** for technical support and mentorship.
-* UIEB Dataset Contributors.
-* Mamba and Visual State Space Model research community.
+* **Dr. Ashish Kumar Bhandari** for his guidance and supervision.
+* **Ms. Khushboo Rani** for her technical support and mentorship.
+* The contributors of the UIEB dataset.
+* The research community working on Mamba and State Space Models.
 
 ---
 
-## 📚 References
+## 📌 Note
 
-1. Gu & Dao, *Mamba: Linear-Time Sequence Modeling with Selective State Spaces*, 2023.
-2. UIEB Benchmark Dataset.
-3. Water-Net.
-4. FUnIE-GAN.
-5. UGAN.
-6. Visual State Space Models (VSSM).
-
----
-
-⭐ If you find this project useful, please consider giving the repository a star.
+This project was completed as part of the Minor Project requirement for the B.Tech program in Electronics and Communication Engineering at NIT Patna. The work focuses on the implementation, training, evaluation, and analysis of a PIXMamba-based underwater image enhancement framework.
